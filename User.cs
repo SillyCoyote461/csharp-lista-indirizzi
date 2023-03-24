@@ -8,11 +8,11 @@ internal class User
 {
     public User(string name, string surname, string street, string city, string province, int? zip)
     {
-        Name = name;
-        Surname = surname;
-        Street = street;
-        City = city;
-        Province = province;
+        Name = UndefinedString(name);
+        Surname = UndefinedString(surname);
+        Street = UndefinedString(street);
+        City = UndefinedString(city);
+        Province = UndefinedString(province);
         Zip = zip;
     }
 
@@ -26,6 +26,12 @@ internal class User
     public override string ToString()
     {
         return $"{Name}, {Surname}, {Street}, {City}, {Province}, {(Zip != null ? Zip : "undefined")}";
+    }
+    
+    protected string UndefinedString(string str)
+    {
+        if (String.IsNullOrEmpty(str)) return "undefined";
+        else return str ;
     }
 }
 
