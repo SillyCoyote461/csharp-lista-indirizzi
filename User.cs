@@ -25,12 +25,13 @@ internal class User
 
     public override string ToString()
     {
-        return $"{Name}, {Surname}, {Street}, {City}, {Province}, {(Zip != null ? Zip : "undefined")}";
+        return $"{(Name != null ? Name : "N/D")}, {(Surname != null ? Surname : "N/D")}, {(Street != null ? Street : "N/D")}, {(City != null ? City : "N/D")}, {(Province != null ? Province : "N/D")}, {(Zip != null ? Zip : "N/D")}";
     }
     
     protected string UndefinedString(string str)
     {
-        if (String.IsNullOrEmpty(str)) return "undefined";
+        string noSpaces = str.Replace(" ", "");
+        if (String.IsNullOrEmpty(str) || noSpaces.Length == 0) return null;
         else return str ;
     }
 }

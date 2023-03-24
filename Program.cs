@@ -2,13 +2,14 @@
 using System.Xml.Linq;
 
 using var file = File.OpenText("..\\..\\..\\addresses.csv");
-string? line = file.ReadLine();
 
 //take out first stream from the loop
-Console.WriteLine(line);
+string? line = file.ReadLine();
+Console.WriteLine($"{line}{Environment.NewLine}");
 
 List<User> users = new List<User>();
-
+List<object> scraps = new List<object>();
+List<string[]> strScraps = new List<string[]>();
 
 
 while (true)
@@ -19,49 +20,105 @@ while (true)
     string[]? data = {"", "", "", ""};
     string? province = null;
     int? zip = null;
-    int position = 0;
+    byte position = 0;
 
-    foreach(var item in array)
+    if (array.Length != 6)
     {
-        string noSpacesStr = item.Replace(" ", "");
-        //if zip code
-        if (int.TryParse(item, out int number) && zip == null)
+        //Console.WriteLine(
+        //    $"-----------------{Environment.NewLine}" +
+        //    $"This user has invalid data format: {Environment.NewLine}" +
+        //    $"{line}{Environment.NewLine}" +
+        //    $"-----------------"
+        //    );
+        strScraps.Add(array);
+    }
+    else
+    {
+        foreach (var item in array)
         {
-            zip = number;
-            break;
-        }
-
-        //if province
-
-        else if (noSpacesStr.Length is 2 && province == null)
-        {
-            bool zipChecker = true;
-            for (int i = 0; i < 2; i++)
+            string noSpacesStr = item.Replace(" ", "");
+            //if zip code
+            if (int.TryParse(item, out int number) && zip == null)
             {
-                if (!Char.IsUpper(noSpacesStr[i]))
+                zip = number;
+                break;
+            }
+
+            //if province
+            else if (noSpacesStr.Length is 2 && province == null)
+            {
+                bool zipChecker = true;
+                for (int i = 0; i < 2; i++)
                 {
-                    zipChecker = false; break;
+                    if (!Char.IsUpper(noSpacesStr[i]))
+                    {
+                        zipChecker = false; break;
+                    }
+                }
+                if (zipChecker)
+                {
+                    province = noSpacesStr;
+                    continue;
                 }
             }
-            if (zipChecker)
+
+            //else this is something
+            else
             {
-                province = noSpacesStr;
-                continue;
+                if (position < 4)
+                {
+
+                    data[position] = item;
+                    position++;
+                }
             }
+        }
+
+        var user = new User(data[0], data[1], data[2], data[3], province, zip);
+        if(user.Name == null || user.Surname == null || user.Street == null || user.City == null || user.Province == null || user.Zip == null)
+        {
+            scraps.Add(user);
         }
         else
         {
-            if(position < 4)
-            {
-
-                data[position] = item;
-                position++;
-            }
+            users.Add(user);
         }
     }
-    var user = new User(data[0], data[1], data[2], data[3], province, zip);
-    users.Add(user);
+
 }
+
+if(scraps.Count > 0 || strScraps.Count > 0)
+{
+    Console.WriteLine(
+        $"-----------------{Environment.NewLine}" +
+        $"These users cannot be stored duo to invalid format or missing data: {Environment.NewLine}");
+    foreach (var scrap in scraps)
+    {
+        if (scrap is User)
+        {
+        Console.WriteLine(scrap.ToString());
+        }
+    }
+
+    foreach (var scrap in strScraps)
+    {
+        for(int i = 0; i < scrap.Length; i++)
+        {
+            if(i < scrap.Length - 1)
+            {
+                Console.Write($"{scrap[i]}, ");
+            }
+            else
+            {
+                Console.Write(scrap[i]);
+            }
+        }
+            Console.WriteLine();
+    }
+    Console.WriteLine($"-----------------{Environment.NewLine}");
+}
+
+
 
 foreach (var user in users)
 {
