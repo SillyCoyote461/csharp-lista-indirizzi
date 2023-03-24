@@ -21,19 +21,37 @@ while (true)
     int? zip;
 
     //try and catch every string
-    try { name = array[0];}
+    try {
+        if (String.IsNullOrEmpty(array[0])) array[0] = "undefined";
+        name = array[0];
+    }
     catch { name = "undefined"; }
 
-    try { surname = array[1]; }
+    try {
+        if (String.IsNullOrEmpty(array[1])) array[1] = "undefined";
+        surname = array[1]; 
+    }
     catch { surname = "undefined"; }
 
-    try { street = array[2]; }
+    try {
+        if (String.IsNullOrEmpty(array[2])) array[2] = "undefined";
+
+        street = array[2]; 
+    }
     catch { street = "undefined"; }
 
-    try { city = array[3]; }
+    try {
+        if (String.IsNullOrEmpty(array[3])) array[3] = "undefined";
+
+        city = array[3]; 
+    }
     catch { city = "undefined"; }
 
-    try { province = array[4]; }
+    try {
+        if (String.IsNullOrEmpty(array[4])) array[4] = "undefined";
+
+        province = array[4]; 
+    }
     catch { province = "undefined"; }
 
     try { zip = Convert.ToInt32(array[5]); }

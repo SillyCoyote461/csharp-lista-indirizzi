@@ -25,7 +25,7 @@ internal class User
 
     public override string ToString()
     {
-        return $"{Name}, {Surname}, {Street}, {City}, {Province}, {Zip}";
+        return $"{Name}, {Surname}, {Street}, {City}, {Province}, {(Zip != null ? Zip : "undefined")}";
     }
 }
 
